@@ -7,6 +7,7 @@ package com.mycompany.FileOpenerProject;
 
 
 
+import java.awt.Color;
 import javax.swing.JFrame;
 import javax.swing.JButton;
 import javax.swing.JTextArea;
@@ -31,16 +32,17 @@ import javax.swing.JScrollPane;
  *
  * @author voldemort
  */
-public class MyFrame extends JFrame implements ActionListener{
+public class AppFrame extends JFrame implements ActionListener{
     
-    private JButton open,save;
-    private JTextField input;
+    private JButton openButton,saveButton;
+    private JTextField inputText;
     private JTextArea display;
     private final Font font;
     private File f;
-    private JScrollPane sc;
-    MyFrame(){
-        font = new Font("Mv Boil", Font.PLAIN, 20);
+    private JScrollPane scroll;
+    AppFrame(){
+        font = new Font(Font.DIALOG, Font.PLAIN, 20);
+       
         
         this.setTitle("File Opener");
         this.setSize(700, 540);
@@ -62,34 +64,36 @@ public class MyFrame extends JFrame implements ActionListener{
         //Save button initializer
         initSaveButton();
         
-        this.add(input);
-        this.add(open);
+        this.add(inputText);
+        this.add(openButton);
         //this.add(display);
-        this.add(sc);  
-        this.add(save);
+        this.add(scroll);  
+        this.add(saveButton);
         this.setVisible(true);
     }
     
     private void initInput(){
-        input = new JTextField();
-        input.setBounds(20, 20, 500, 40);
-        input.setFont(font);
+        inputText = new JTextField();
+        inputText.setBounds(200, 20, 300, 40);
+        inputText.setCaretPosition(0);
+        inputText.setFont(font);
+        
     }
     
     private void initOpenButton(){
-        open = new JButton("Open");
-        open.addActionListener(this);
-        open.setBounds(570, 20, 90,40);
-        open.setFocusable(false);
-        open.setFont(font);
+        openButton = new JButton("Open");
+        openButton.addActionListener(this);
+        openButton.setBounds(120, 440, 90,40);
+        openButton.setFocusable(false);
+        openButton.setFont(font);
     }
     
     private void initSaveButton(){
-        save = new JButton("Save");
-        save.setBounds(570, 440, 90, 40);
-        save.addActionListener(this);
-        save.setFocusable(false);
-        save.setFont(font);
+        saveButton = new JButton("Save");
+        saveButton.setBounds(500, 440, 90, 40);
+        saveButton.addActionListener(this);
+        saveButton.setFocusable(false);
+        saveButton.setFont(font);
     }
     
     private void initFileDisplay(){
@@ -98,18 +102,19 @@ public class MyFrame extends JFrame implements ActionListener{
         display = new JTextArea();
         
         // Making the text area scrollable
-        sc = new JScrollPane(display);
-        sc.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);  
-        sc.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);  
-        sc.setBounds(20,70, 640, 350);
+        scroll = new JScrollPane(display);
+        scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);  
+        scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);  
+        scroll.setBounds(20,70, 640, 350);
         
         display.setFont(font);
+        //display.setForeground(Color.CYAN);
         display.setEditable(false);
     }
     
     private void openFile() throws IOException, FileNotFoundException{
         display.setText("");
-        String location = "/home/voldemort/Desktop/" + input.getText();
+        String location = "/home/voldemort/Desktop/" + inputText.getText();
         f = new File(location);
         BufferedReader in = new BufferedReader
                             (new InputStreamReader
@@ -143,12 +148,12 @@ public class MyFrame extends JFrame implements ActionListener{
     }
     
     public static void main(String[] args) {
-        new MyFrame();
+        new AppFrame();
     }
     
     @Override
     public void actionPerformed(ActionEvent e) {
-       if(e.getSource() == open){
+       if(e.getSource() == openButton){
            try {
                openFile();
            } catch (FileNotFoundException ex) {
@@ -158,9 +163,12 @@ public class MyFrame extends JFrame implements ActionListener{
            } catch (IOException ex) {
               System.out.println("We encountered " + ex);
               JOptionPane.showMessageDialog(this, "Couldn't read the file", "Warning", JOptionPane.WARNING_MESSAGE);
+           } catch(Exception ex){
+               System.out.println("We encountered " + ex);
+               JOptionPane.showMessageDialog(this, "No file Name entered", "Warning", JOptionPane.WARNING_MESSAGE);
            }
        }
-       else if(e.getSource() == save){
+       else if(e.getSource() == saveButton){
            try {
                saveFile();
                JOptionPane.showMessageDialog(this, "Succesfully updated the file");
